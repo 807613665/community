@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.jws.Oneway;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class AuthorizeController {
@@ -25,9 +26,10 @@ public class AuthorizeController {
     private String setRedirectUri;
 
     @GetMapping("/callback")
-    public String callback(@RequestParam(name="code")String code,
-                           @RequestParam(name="state")String state){
-        AccessTokenDTO accessTokenDTO=new AccessTokenDTO();
+    public String callback(@RequestParam(name = "code") String code,
+                           @RequestParam(name = "state") String state,
+                           HttpServletRequest request) {
+        AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setCode(code);
         accessTokenDTO.setClient_id(setClientId);
         accessTokenDTO.setClient_secret(setClientSecret);
@@ -37,6 +39,14 @@ public class AuthorizeController {
 
         System.out.println(githubUser.toString());
 
-        return "index";
+        if (githubUser != null) {
+            //登录成功，写cookies
+            request.getSession().setAttribute("user",githubUser);
+            return "redirect:/";
+        } else {
+            //登录失败
+            return "redirect:/";
+        }
+
     }
 }
