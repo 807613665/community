@@ -57,12 +57,13 @@ public class PublishController {
 
         User user=null;
         Cookie[] cookies = request.getCookies();
-        for(Cookie i:cookies){
-            if(i.getName().equals("token")){
-                user = userMapper.cheackToken(i.getValue());
-                break;
+        if(cookies!=null&&cookies.length!=0)
+            for(Cookie i:cookies){
+                if(i.getName().equals("token")){
+                    user = userMapper.cheackToken(i.getValue());
+                    break;
+                }
             }
-        }
         if(user==null){
             model.addAttribute("error","用户未登录");
             return "publish";
