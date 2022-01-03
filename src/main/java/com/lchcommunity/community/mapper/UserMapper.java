@@ -13,4 +13,7 @@ public interface UserMapper {
 
     @Select("select * from user where token = #{token}")
     User cheackToken(@Param("token") String token);
+
+    @Select("select * from user where id = #{id}")
+    User selectId(@Param("id") Integer id);
 }
