@@ -8,12 +8,15 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface UserMapper {
+    //新建用户
     @Insert("insert into user (name,account_id,token,gmt_create,gmt_modified,avatar_url) values (#{name},#{accountId},#{token},#{gmtCreate},#{gmtModified},#{avatarUrl});")
     void insert(User user);
 
+    //查询用户的token
     @Select("select * from user where token = #{token}")
     User cheackToken(@Param("token") String token);
 
+    //查询用户
     @Select("select * from user where id = #{id}")
     User selectId(@Param("id") Integer id);
 }

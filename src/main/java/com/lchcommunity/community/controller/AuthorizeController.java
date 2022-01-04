@@ -21,7 +21,7 @@ public class AuthorizeController {
 
     @Autowired
     private GithubProvider githubProvider;
-
+    //将application.properties中的数据写入变量中
     @Value("${github.setClient.id}")
     private String setClientId;
 
@@ -34,24 +34,27 @@ public class AuthorizeController {
     @Autowired
     private UserMapper userMapper;
 
+    //进行github登录认证
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
                            HttpServletResponse response,
                            HttpServletRequest request) {
+        //将AccessTokenDTO发送到github 获取token  将数据写入到AccessTokenDTO中
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setCode(code);
         accessTokenDTO.setClient_id(setClientId);
         accessTokenDTO.setClient_secret(setClientSecret);
         accessTokenDTO.setRedirect_uri(setRedirectUri);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
+        //获取到用户信息
         GithubUser githubUser = githubProvider.getGithubUser(accessToken);
 
         System.out.println(githubUser.toString());
 
         if (githubUser.getId() != null) {
             //登录成功，写cookies
-            request.getSession().setAttribute("user",githubUser);
+            request.getSession().setAttribute("user", githubUser);
             User user = new User();
             user.setName(githubUser.getName());
             String token = UUID.randomUUID().toString();
@@ -61,8 +64,8 @@ public class AuthorizeController {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
 
-            response.addCookie(new Cookie("token",token));
-
+            response.addCookie(new Cookie("token", token));
+            //将用户写入数据库中
             userMapper.insert(user);
             return "redirect:/";
         } else {
