@@ -19,7 +19,14 @@ public interface QuestionMapper {
     @Select("select * from question limit #{offset},#{size}")
     List<Question> selectQuestion(@Param("offset") Integer offset, @Param("size") Integer size);
 
+    //查询Creator
+    @Select("select * from question where creator=#{id} limit #{offset},#{size}")
+    List<Question> selectQuestionByCreator(@Param("id") Integer id,@Param("offset") Integer offset, @Param("size") Integer size);
+
     //查询总数
     @Select("select count(1) from QUESTION;")
     Integer count();
+
+    @Select("select count(1) from QUESTION where creator=#{id};")
+    Integer countByCreator(@Param("id") Integer id);
 }

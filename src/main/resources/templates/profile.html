@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>community</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/community.css"/>
+    <script src="/js/jquery-3.6.0.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+
+</head>
+<body>
+<div th:insert="~{ navigation :: nav}"></div>
+<div class="container-fluid main">
+    <div class="row profile">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2 th:text="${elementName}"></h2>
+            <div class="media" th:each="questions : ${paginationDTO.questionDTOList}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded localImg" th:src="${questions.user.avatarUrl}">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${questions.title}"></h4>
+                    <span class="text-desc"><span th:text="${questions.commentCount}"></span> 个回复 • <span
+                            th:text="${questions.viewCount}"></span> 次浏览 • <span
+                            th:text="${#dates.format(questions.gmtCreate,'yyyy-MM-dd HH:mm')}"></span></span>
+                </div>
+            </div>
+            <!--分页-->
+            <nav aria-label="Page navigation" style="float:right;" th:if="${paginationDTO.pageSum != 1}">
+                <ul class="pagination">
+                    <li th:if="${paginationDTO.showFirstPage}">
+                        <a th:href="@{'/profile/'+${element}(page=${1},size=${paginationDTO.size})}" aria-label="Previous">
+                            <span aria-hidden="true"><<</span>
+                        </a>
+                    </li>
+                    <li th:if="${paginationDTO.showLastPage}">
+                        <a th:href="@{'/profile/'+${element}(page=${paginationDTO.page-1},size=${paginationDTO.size})}"
+                           aria-label="Previous">
+                            <span aria-hidden="true"><</span>
+                        </a>
+                    </li>
+                    <li th:each="i : ${paginationDTO.pages}"
+                        th:classappend="${i == paginationDTO.page} ? 'active' : '' ">
+                        <a th:href="@{'/profile/'+${element}(page=${i},size=${paginationDTO.size})}" th:text="${i}"
+                           class="active"></a>
+                    </li>
+                    <li th:if="${paginationDTO.showNextPage}">
+                        <a th:href="@{'/profile/'+${element}(page=${paginationDTO.page+1},size=${paginationDTO.size})}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">></span>
+                        </a>
+                    </li>
+                    <li th:if="${paginationDTO.showEndPage}">
+                        <a th:href="@{'/profile/'+${element}(page=${paginationDTO.pageSum},size=${paginationDTO.size})}"
+                           aria-label="Next">
+                            <span aria-hidden="true">>></span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="list-group rightList">
+                <a href="/profile/question"
+                   th:classappend="${element.equals('question')} ? 'list-group-item active' : 'list-group-item' ">
+                    我的问题
+                </a>
+                <a href="/profile/reply"
+                   th:classappend="${element.equals('reply')} ? 'list-group-item active' : 'list-group-item' ">
+                    <span class="badge">14</span>
+                    最新回复
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
