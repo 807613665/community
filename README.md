@@ -9,7 +9,8 @@
 [maven 仓库地址](https://mvnrepository.com/)  
 [菜鸟教程mysql](https://www.runoob.com/mysql/mysql-tutorial.html)  
 [readme教程](https://blog.csdn.net/u_7890/article/details/81565679)  
-[thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
+[thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)  
+[spring web文档](https://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#spring-web)
 # 工具
 [flyway](https://flywaydb.org/documentation/getstarted/firststeps/maven)   
 [lombok](https://projectlombok.org/setup/maven)
