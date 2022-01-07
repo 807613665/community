@@ -16,6 +16,7 @@
     <div class="row profile">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2 th:text="${elementName}"></h2>
+            <hr>
             <div class="media" th:each="questions : ${paginationDTO.questionDTOList}">
                 <div class="media-left">
                     <a href="#">
@@ -30,7 +31,7 @@
                 </div>
             </div>
             <!--分页-->
-            <nav aria-label="Page navigation" style="float:right;" th:if="${paginationDTO.pageSum != 1}">
+            <nav aria-label="Page navigation" style="float:right;" th:if="${paginationDTO.pageSum > 1}">
                 <ul class="pagination">
                     <li th:if="${paginationDTO.showFirstPage}">
                         <a th:href="@{'/profile/'+${element}(page=${1},size=${paginationDTO.size})}" aria-label="Previous">

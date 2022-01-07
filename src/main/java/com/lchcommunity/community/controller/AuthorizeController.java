@@ -5,6 +5,7 @@ import com.lchcommunity.community.dto.GithubUser;
 import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.User;
 import com.lchcommunity.community.provider.GithubProvider;
+import com.lchcommunity.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -31,8 +32,9 @@ public class AuthorizeController {
     @Value("${github.setRedirect.uri}")
     private String setRedirectUri;
 
+
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     //进行github登录认证
     @GetMapping("/callback")
@@ -52,7 +54,7 @@ public class AuthorizeController {
 
         System.out.println(githubUser.toString());
 
-        if (githubUser.getId() != null) {
+        if (githubUser != null && githubUser.getId() != null) {
             //登录成功，写cookies
             request.getSession().setAttribute("user", githubUser);
             User user = new User();
@@ -61,17 +63,27 @@ public class AuthorizeController {
             user.setToken(token);
             user.setAvatarUrl(githubUser.getAvatarurl());
             user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
 
             response.addCookie(new Cookie("token", token));
-            //将用户写入数据库中
-            userMapper.insert(user);
+            //更新用户信息或插入新用户
+            userService.updateOrInsert(user);
             return "redirect:/";
         } else {
             //登录失败
             return "redirect:/";
         }
 
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
+        //删除Session
+        request.getSession().removeAttribute("user");
+        //删除Cookies
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }
