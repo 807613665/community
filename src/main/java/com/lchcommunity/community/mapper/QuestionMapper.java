@@ -2,10 +2,7 @@ package com.lchcommunity.community.mapper;
 
 import com.lchcommunity.community.model.Question;
 import com.lchcommunity.community.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -32,4 +29,7 @@ public interface QuestionMapper {
 
     @Select("select * from QUESTION where id=#{id};")
     Question getQuestionById(@Param("id") Integer id);
+
+    @Update("update question set title=#{title},description=#{description},gmt_modified=#{gmtModified},tag=#{tag} where id=#{id}")
+    void update(Question question);
 }

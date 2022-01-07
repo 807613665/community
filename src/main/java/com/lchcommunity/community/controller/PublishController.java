@@ -4,10 +4,13 @@ import com.lchcommunity.community.mapper.QuestionMapper;
 import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.Question;
 import com.lchcommunity.community.model.User;
+import com.lchcommunity.community.service.QuestionService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,9 +24,21 @@ public class PublishController {
     QuestionMapper questionMapper;
     @Autowired
     UserMapper userMapper;
-
+    @Autowired
+    QuestionService questionService;
     @GetMapping("/publish")
     public String publish() {
+        return "publish";
+    }
+
+    @GetMapping("/publish/{id}")
+    public String publish(@PathVariable("id") Integer id,
+                          Model model) {
+        Question question = questionMapper.getQuestionById(id);
+        model.addAttribute("title", question.getTitle());
+        model.addAttribute("description", question.getDescription());
+        model.addAttribute("tag", question.getTag());
+        model.addAttribute("id",id);
         return "publish";
     }
 
@@ -32,6 +47,7 @@ public class PublishController {
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("tag") String tag,
+            @RequestParam("id") Integer id,
             HttpServletRequest request,
             Model model
     ) {
@@ -68,9 +84,10 @@ public class PublishController {
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(question.getGmtCreate());
-        questionMapper.insert(question);
+
+        question.setId(id);
+        //更新或插入操作
+        questionService.updateOrInsert(question);
         return "redirect:/";
     }
 }
