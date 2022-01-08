@@ -2,6 +2,7 @@ package com.lchcommunity.community.interceptor;
 
 import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.User;
+import com.lchcommunity.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Service
 public class SessinoInterceptor implements HandlerInterceptor {
@@ -23,9 +25,13 @@ public class SessinoInterceptor implements HandlerInterceptor {
         if (cookies != null && cookies.length != 0)
             for (Cookie i : cookies) {
                 if (i.getName().equals("token")) {
-                    User user = userMapper.cheackToken(i.getValue());
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
+                    String token = i.getValue();
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria()
+                            .andTokenEqualTo(token);
+                    List<User> user = userMapper.selectByExample(userExample);
+                    if (user.size() != 0) {
+                        request.getSession().setAttribute("user", user.get(0));
                     }
                     break;
                 }

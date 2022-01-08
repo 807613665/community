@@ -2,8 +2,11 @@ package com.lchcommunity.community.service;
 
 import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.User;
+import com.lchcommunity.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -12,14 +15,22 @@ public class UserService {
     private UserMapper userMapper;
 
     public void updateOrInsert(User user) {
-        User dbuser = userMapper.selectByAccountId(user.getAccountId());
-        if(dbuser!=null){
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andAccountIdEqualTo(user.getAccountId());
+        List<User> dbusers = userMapper.selectByExample(userExample);
+        if(dbusers.size()!=0){
+            User dbuser=dbusers.get(0);
             //更新信息
-            dbuser.setName(user.getName());
-            dbuser.setAvatarUrl(user.getAvatarUrl());
-            dbuser.setToken(user.getToken());
-            dbuser.setGmtModified(System.currentTimeMillis());
-            userMapper.update(dbuser);
+            User newUser = new User();
+            newUser.setName(user.getName());
+            newUser.setAvatarUrl(user.getAvatarUrl());
+            newUser.setToken(user.getToken());
+            newUser.setGmtModified(System.currentTimeMillis());
+            UserExample example = new UserExample();
+            example.createCriteria()
+                    .andIdEqualTo(dbuser.getId());
+            userMapper.updateByExampleSelective(newUser, example);
         }else {
             //插入新用户
             user.setGmtCreate(System.currentTimeMillis());

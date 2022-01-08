@@ -13,8 +13,12 @@
 [spring MVC](https://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#spring-web)
 # 工具
 [flyway](https://flywaydb.org/documentation/getstarted/firststeps/maven)   
-[lombok](https://projectlombok.org/setup/maven)
+[lombok](https://projectlombok.org/setup/maven)  
+[mybatis generator](https://mybatis.org/generator/)
 ## 命令
 ```bash
 mvn flyway:migrate
+#使用标准 Maven 命令行属性将参数传递给目标。例如：
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+#这将运行 MBG 并指示它覆盖它可能找到的任何现有 Java 文件。
 ```
