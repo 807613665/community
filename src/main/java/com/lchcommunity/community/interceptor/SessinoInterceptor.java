@@ -4,6 +4,7 @@ import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.User;
 import com.lchcommunity.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,8 +19,17 @@ public class SessinoInterceptor implements HandlerInterceptor {
     @Autowired
     UserMapper userMapper;
 
+    @Value("${github.redirect.uri}")
+    private String githubRedirectUri;
+
+    @Value("${gitee.redirect.uri}")
+    private String giteeRedirectUri;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //设置 context 级别的属性
+        request.getServletContext().setAttribute("giteeRedirectUri", giteeRedirectUri);
+        request.getServletContext().setAttribute("githubRedirectUri", githubRedirectUri);
         //使用cookies判断是否已经登录
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length != 0)

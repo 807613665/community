@@ -37,8 +37,13 @@
                             <li><a href="/logout">退出登录</a></li>
                         </ul>
                     </li>
+                    <li th:unless="${session.user != null}">
+                        <a th:href="@{https://gitee.com/oauth/authorize(client_id='a8a8ab23769eb09aba2f27efdedbd52946b72ab323dcfda2a7c9118ea0c29f85',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('giteeRedirectUri')},response_type=code)}">
+                        Gitee登录
+                        </a>
+                    </li>
                     <li th:unless="${session.user != null}"><a
-                            href="https://github.com/login/oauth/authorize?client_id=8296113677c89fddba94&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
+                            th:href="@{https://github.com/login/oauth/authorize(client_id='8296113677c89fddba94',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('githubRedirectUri')},scope='user',state=1)}">Github登录</a>
                     </li>
                 </ul>
             </div>

@@ -1,6 +1,7 @@
 package com.lchcommunity.community.provider;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.lchcommunity.community.dto.AccessTokenDTO;
 import com.lchcommunity.community.dto.GithubUser;
 import okhttp3.*;
@@ -42,6 +43,46 @@ public class GithubProvider {
             System.out.println(s);
             GithubUser githubUser = JSON.parseObject(s, GithubUser.class);
             return githubUser;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String getGiteeAccessToken(AccessTokenDTO accessTokenDTO) {
+        MediaType mediaType = MediaType.get("application/json; charset=utf-8");
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = RequestBody.create(mediaType, JSON.toJSONString(accessTokenDTO));
+        Request request = new Request.Builder()
+                .url("https://gitee.com/oauth/token")
+                .post(body)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            String s = response.body().string();
+            JSONObject json = JSON.parseObject(s);
+            String token = json.get("access_token").toString();
+            System.out.println(token);
+            return token;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public GithubUser getGiteeUser(String accessToken) {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://gitee.com/api/v5/user?access_token="+accessToken)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            String s = response.body().string();
+            System.out.println(s);
+            GithubUser giteeUser = JSON.parseObject(s, GithubUser.class);
+            return giteeUser;
         } catch (Exception e) {
             e.printStackTrace();
         }

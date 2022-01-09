@@ -2,7 +2,6 @@ package com.lchcommunity.community.controller;
 
 import com.lchcommunity.community.dto.AccessTokenDTO;
 import com.lchcommunity.community.dto.GithubUser;
-import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.User;
 import com.lchcommunity.community.provider.GithubProvider;
 import com.lchcommunity.community.service.UserService;
@@ -23,18 +22,67 @@ public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
     //将application.properties中的数据写入变量中
-    @Value("${github.setClient.id}")
-    private String setClientId;
+    @Value("${github.client.id}")
+    private String githubClientId;
 
-    @Value("${github.setClient.secret}")
-    private String setClientSecret;
+    @Value("${github.client.secret}")
+    private String githubClientSecret;
 
-    @Value("${github.setRedirect.uri}")
-    private String setRedirectUri;
+    @Value("${github.redirect.uri}")
+    private String githubRedirectUri;
+
+    @Value("${gitee.client.id}")
+    private String giteeClientId;
+
+    @Value("${gitee.client.secret}")
+    private String giteeClientSecret;
+
+    @Value("${gitee.redirect.uri}")
+    private String giteeRedirectUri;
 
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/callback/gitee")
+    public String callback(@RequestParam(name = "code") String code,
+                           HttpServletResponse response,
+                           HttpServletRequest request) {
+        //将AccessTokenDTO发送到github 获取token  将数据写入到AccessTokenDTO中
+        AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
+        accessTokenDTO.setCode(code);
+        accessTokenDTO.setClient_id(giteeClientId);
+        accessTokenDTO.setClient_secret(giteeClientSecret);
+        accessTokenDTO.setRedirect_uri(giteeRedirectUri);
+        String accessToken = githubProvider.getGiteeAccessToken(accessTokenDTO);
+        //获取到用户信息
+        GithubUser giteeUser = githubProvider.getGiteeUser(accessToken);
+
+        System.out.println(giteeUser.toString());
+
+        if (giteeUser != null && giteeUser.getId() != null) {
+            //登录成功，写cookies
+            request.getSession().setAttribute("user", giteeUser);
+            User user = new User();
+            user.setName(giteeUser.getName());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            user.setAvatarUrl(giteeUser.getAvatarurl());
+            user.setAccountId(String.valueOf(giteeUser.getId()));
+
+            Cookie cookie = new Cookie("token", token);
+            cookie.setMaxAge(60 * 60 * 24 * 30 * 6);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            //更新用户信息或插入新用户
+            userService.updateOrInsert(user);
+            return "redirect:/";
+        } else {
+            //登录失败
+            return "redirect:/";
+        }
+
+    }
 
     //进行github登录认证
     @GetMapping("/callback")
@@ -45,9 +93,9 @@ public class AuthorizeController {
         //将AccessTokenDTO发送到github 获取token  将数据写入到AccessTokenDTO中
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setCode(code);
-        accessTokenDTO.setClient_id(setClientId);
-        accessTokenDTO.setClient_secret(setClientSecret);
-        accessTokenDTO.setRedirect_uri(setRedirectUri);
+        accessTokenDTO.setClient_id(githubClientId);
+        accessTokenDTO.setClient_secret(githubClientSecret);
+        accessTokenDTO.setRedirect_uri(githubRedirectUri);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         //获取到用户信息
         GithubUser githubUser = githubProvider.getGithubUser(accessToken);

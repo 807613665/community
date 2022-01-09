@@ -8,4 +8,5 @@ public class AccessTokenDTO {
     private String client_secret;
     private String code;
     private String redirect_uri;
+    private String grant_type="authorization_code";
 }
