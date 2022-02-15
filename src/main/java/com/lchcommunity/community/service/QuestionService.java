@@ -4,6 +4,7 @@ import com.lchcommunity.community.dto.PaginationDTO;
 import com.lchcommunity.community.dto.QuestionDTO;
 import com.lchcommunity.community.exception.CustomizeErrorCode;
 import com.lchcommunity.community.exception.CustomizeException;
+import com.lchcommunity.community.mapper.QuestionExtMapper;
 import com.lchcommunity.community.mapper.QuestionMapper;
 import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.Question;
@@ -24,6 +25,8 @@ public class QuestionService {
     UserMapper userMapper;
     @Autowired
     QuestionMapper questionMapper;
+    @Autowired
+    QuestionExtMapper questionExtMapper;
 
     //将Question、User、pageList  组装到一个类中
     public PaginationDTO getQuestion(Integer page, Integer size) {
@@ -120,5 +123,9 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        questionExtMapper.incView(id);
     }
 }
