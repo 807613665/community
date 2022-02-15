@@ -15,7 +15,7 @@ public class QuestionController {
     QuestionService questionService;
 
     @GetMapping("/question/{id}")
-    public String question(@PathVariable("id") Integer id,
+    public String question(@PathVariable("id") Long id,
                            Model model) {
         //增加阅读数
         questionService.incView(id);
