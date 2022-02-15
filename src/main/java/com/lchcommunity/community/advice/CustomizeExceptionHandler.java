@@ -22,6 +22,7 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
         if(e instanceof CustomizeException){
             model.addAttribute("message",e.getMessage());
         }else{
+            System.out.println(e.getMessage());
             model.addAttribute("message","请稍后重试~");
         }
         return new ModelAndView("error");

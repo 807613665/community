@@ -15,7 +15,8 @@
 # 工具
 [flyway](https://flywaydb.org/documentation/getstarted/firststeps/maven)   
 [lombok](https://projectlombok.org/setup/maven)  
-[mybatis generator](https://mybatis.org/generator/)
+[mybatis generator](https://mybatis.org/generator/)  
+[getman 接口测试工具](https://getman.cn/)
 ## 命令
 ```bash
 mvn flyway:migrate
