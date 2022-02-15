@@ -1,31 +1,42 @@
-body{
+body {
     background-color: #efefef;
 }
-.main{
+
+.main {
     background-color: white;
     margin: 30px;
 }
-.btn_publish{
+
+.btn_publish {
     float: right;
     margin: 25px;
 }
-.warning{
+
+.warning {
     margin-top: 25px;
     padding: 6px 12px;
     line-height: 1.42857143;
 }
-.localImg{
+
+.localImg {
     width: 40px;
 }
-.text-desc{
+
+.text-desc {
     font-size: 12px;
     font-weight: normal;
     color: #999;
 }
-.profile .rightList{
+
+.profile .rightList {
     margin-top: 15px;
 }
-.community-menu{
+
+.community-menu {
     font-size: 13px;
     color: #999;
+}
+
+.jumbotron {
+    margin: 50px;
 }
