@@ -10,6 +10,7 @@ import com.lchcommunity.community.model.Comment;
 import com.lchcommunity.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -20,7 +21,8 @@ public class CommentService {
     CommentMapper commentMapper;
     @Autowired
     QuestionExtMapper questionExtMapper;
-
+    //此注释作为默认值应用于声明类及其子类的所有方法。
+    @Transactional//事务 将方法中的数据集操作作为一个事务，要么都成功，要么都失败
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);

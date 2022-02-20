@@ -11,7 +11,8 @@
 [菜鸟教程mysql](https://www.runoob.com/mysql/mysql-tutorial.html)  
 [readme教程](https://blog.csdn.net/u_7890/article/details/81565679)  
 [thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)  
-[spring MVC](https://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#spring-web)
+[spring MVC](https://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#spring-web)  
+[jquery](https://jquery.com/)
 # 工具
 [flyway](https://flywaydb.org/documentation/getstarted/firststeps/maven)   
 [lombok](https://projectlombok.org/setup/maven)  
