@@ -2,6 +2,7 @@ package com.lchcommunity.community.controller;
 
 import com.lchcommunity.community.dto.CommentDTO;
 import com.lchcommunity.community.dto.QuestionDTO;
+import com.lchcommunity.community.enums.CommentTypeEnum;
 import com.lchcommunity.community.service.CommentService;
 import com.lchcommunity.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class QuestionController {
     public String question(@PathVariable("id") Long id,
                            Model model) {
         //传递问题列表
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id,CommentTypeEnum.QUESTION);
         model.addAttribute("comments", comments);
 
         //增加阅读数

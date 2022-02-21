@@ -57,13 +57,16 @@ public class CommentService {
         commentMapper.insert(comment);
     }
 
-    public List<CommentDTO> listByQuestionId(Long id) {
+    public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();
         //获取问题中对应ParentId的所有评论
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(type.getType());
+        commentExample.setOrderByClause("gmt_create desc");//在sql语句的最后面增加排序  倒序
         List<Comment> comments = commentMapper.selectByExample(commentExample);
+
+
         if(comments.size()==0)
             return new ArrayList<>();
         //不为空将评论人写入到set中
