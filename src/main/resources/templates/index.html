@@ -10,6 +10,15 @@
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
 
 </head>
+<script type="application/javascript">
+    window.onload=function (){
+        let login = window.localStorage.getItem("closabel");
+        if(login=="true"){
+            window.close();
+            window.localStorage.removeItem("closabel");
+        }
+    }
+</script>
 <body>
 <div th:insert="~{ navigation :: nav}"></div>
 <div class="container-fluid main">
