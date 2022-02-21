@@ -1,16 +1,24 @@
 package com.lchcommunity.community.service;
 
+import com.lchcommunity.community.dto.CommentDTO;
 import com.lchcommunity.community.enums.CommentTypeEnum;
 import com.lchcommunity.community.exception.CustomizeErrorCode;
 import com.lchcommunity.community.exception.CustomizeException;
 import com.lchcommunity.community.mapper.CommentMapper;
 import com.lchcommunity.community.mapper.QuestionExtMapper;
 import com.lchcommunity.community.mapper.QuestionMapper;
-import com.lchcommunity.community.model.Comment;
-import com.lchcommunity.community.model.Question;
+import com.lchcommunity.community.mapper.UserMapper;
+import com.lchcommunity.community.model.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -21,6 +29,8 @@ public class CommentService {
     CommentMapper commentMapper;
     @Autowired
     QuestionExtMapper questionExtMapper;
+    @Autowired
+    UserMapper userMapper;
     //此注释作为默认值应用于声明类及其子类的所有方法。
     @Transactional//事务 将方法中的数据集操作作为一个事务，要么都成功，要么都失败
     public void insert(Comment comment) {
@@ -45,5 +55,39 @@ public class CommentService {
 
         }
         commentMapper.insert(comment);
+    }
+
+    public List<CommentDTO> listByQuestionId(Long id) {
+        CommentExample commentExample = new CommentExample();
+        //获取问题中对应ParentId的所有评论
+        commentExample.createCriteria()
+                .andParentIdEqualTo(id)
+                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+        List<Comment> comments = commentMapper.selectByExample(commentExample);
+        if(comments.size()==0)
+            return new ArrayList<>();
+        //不为空将评论人写入到set中
+        Set<Long> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
+        ArrayList<Long> userIds = new ArrayList<>(commentators);//set转为list
+
+        //获取对应ID的用户信息
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andIdIn(userIds);
+        List<User> users = userMapper.selectByExample(userExample);
+        //将用户信息存到map中
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+
+        //将comment转成CommentDTO
+        List<CommentDTO> commentDTOList = comments.stream().map(comment -> {
+            CommentDTO commentDTO = new CommentDTO();
+            //将对象的属性注入到另一个对象中
+            BeanUtils.copyProperties(comment, commentDTO);
+            //设置User
+            commentDTO.setUser(userMap.get(comment.getCommentator()));
+            return commentDTO;
+        }).collect(Collectors.toList());
+
+        return commentDTOList;
     }
 }
