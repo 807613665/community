@@ -37,12 +37,12 @@
                 <div class="publish-tag-tab" id="select-tag" style="display: none">
                     <ul class="nav nav-tabs" role="tablist">
 
-                        <li role="presentation" th:class="${#strings.equals(selectTag.title,'开发语言') ? 'active':' '}" th:each="selectTag : ${tags}">
+                            <li role="presentation" th:each="selectTag,iterStat : ${tags}" th:class="${ iterStat.first ? 'active':' '}" >
                             <a th:href="${'#'+selectTag.title}" aria-controls="home" role="tab" data-toggle="tab" th:text="${selectTag.title}"></a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" th:id="${selectTag.title}" th:each="selectTag : ${tags}">
+                        <div role="tabpanel" th:class="${ iterStat.first ? 'active tab-pane':'tab-pane'}" th:id="${selectTag.title}" th:each="selectTag,iterStat : ${tags}">
                             <span class="label label-info qu glyphicon glyphicon-tags" th:onclick="selectTag([[${tag}]])" th:each="tag : ${selectTag.tag}" th:text="${' '+tag}">&nbsp;</span>
                         </div>
                     </div>
