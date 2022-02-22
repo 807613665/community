@@ -30,6 +30,11 @@ public class QuestionController {
         //增加阅读数
         questionService.incView(id);
         QuestionDTO question = questionService.getQuestionById(id);
+
+        //相关问题列表
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(question);
+
+        model.addAttribute("relatedQuestions", relatedQuestions);
         model.addAttribute("questions", question);
         return "question";
     }

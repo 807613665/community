@@ -55,6 +55,7 @@ public class CommentService {
             dbcomment.setCommentCount(1);
             commentExtMapper.incCommentcout(dbcomment);
         }
+        comment.setCommentCount(0);
         commentMapper.insert(comment);
     }
 

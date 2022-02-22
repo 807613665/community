@@ -27,4 +27,17 @@
         set COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType=INTEGER}
             where id = #{id}
     </update>
+<!--    使用正则表达式查询相关联的问题-->
+    <select id="selectRelated" parameterType="com.lchcommunity.community.model.Question" resultMap="BaseResultMap">
+        select * from QUESTION
+        <where>
+            <if test="id != null">
+                and id != #{id}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tag REGEXP #{tag}
+            </if>
+        </where>
+        order by gmt_create limit 20
+    </select>
 </mapper>
