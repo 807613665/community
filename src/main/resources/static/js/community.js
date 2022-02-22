@@ -122,7 +122,20 @@ function collapseComments(e) {
                 e.classList.add("active");
             });
         }
-
-
     }
+}
+function showSelectTag() {
+    $("#select-tag").show();
+}
+function selectTag(tag){
+    var value = $("#tag").val();
+    if(value.indexOf(tag)==-1){
+        if(value){
+            $("#tag").attr("value",value+","+tag);
+        }else{
+            $("#tag").attr("value",tag);
+        }
+    }
+
+
 }
