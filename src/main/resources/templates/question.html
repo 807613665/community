@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${questions.title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/community.css"/>
     <script src="/js/jquery-3.6.0.js"></script>
+    <script src="/js/moment.js"></script>
     <script src="/js/community.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 
@@ -56,34 +58,17 @@
                             <div th:text="${comment.content}"></div>
                             <div class="menu">
                                 <span class="glyphicon glyphicon-thumbs-up icon"></span>
-                                <span class="glyphicon glyphicon-comment icon" th:data-id="${comment.id}"
-                                      onclick="collapseComments(this)"></span>
+                                <span th:data-id="${comment.id}" onclick="collapseComments(this)" class="icon">
+                                    <span class="glyphicon glyphicon-comment" ></span>
+                                    <span th:text="${comment.commentCount}"></span>
+                                </span>
                                 <span class="pull-right"
                                       th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd')}"></span>
                             </div>
                             <!--二级评论-->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-x s-12 collapse sub-comments"
                                  th:id="${'comment-'+comment.id}">
-
-<!--                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments"-->
-<!--                                     th:each="comment : ${comments}">-->
-<!--                                    <div class="media">-->
-<!--                                        <div class="media-left">-->
-<!--                                            <a href="#">-->
-<!--                                                <img class="media-object img-rounded localImg"-->
-<!--                                                     th:src="${comment.user.avatarUrl}">-->
-<!--                                            </a>-->
-<!--                                        </div>-->
-<!--                                        <div class="media-body">-->
-<!--                                            <h5 th:text="${comment.user.name}"></h5>-->
-<!--                                            <div th:text="${comment.content}"></div>-->
-<!--                                            <div class="menu">-->
-<!--                                                <span class="pull-right"-->
-<!--                                                      th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd')}"></span>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <!--内容使用js添加-->
 
                                 <!--发布二级评论-->
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

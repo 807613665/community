@@ -66,59 +66,63 @@ function collapseComments(e) {
         e.classList.remove("active");
     } else {
         var subComments = $("#comment-" + id);
-        $.getJSON("/comment/" + id, function (data) {//遍历对应二级评论
-            $.each(data.data, function (index, comment) {
-
-                var mediaBody = $("<div/>", {
-                    "class": "media-body"
-                }).append(
-                    $("<h5/>", {
-                        "html": comment.user.name
-                    })
-                ).append(
-                    $("<div/>", {
-                        "html": comment.content
-                    })
-                ).append(
-                    $("<div/>", {
-                        "class": "menu"
-                    }).append(
-                        // $("span",{
-                        //     "class":"pull-right",
-                        //     "html": moment(comment.gmtCreate).format('YYYY-MM-DD')
-                        // })
-                    )
-                );
-
-                var mediaLeft = $("<div/>", {
-                    "class": "media-left"
-                }).append(
-                    $("<a/>")
-                ).append(
-                    $("<img/>", {
-                        "class": "media-object img-rounded localImg",
-                        "src": comment.user.avatarUrl
-                    })
-                );
-
-                var media = $("<div/>", {
-                    "class": "media"
-                }).append(mediaLeft).append(mediaBody);
-
-                var comments = $("<div/>", {
-                    "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12 comments"
-                }).append(media);
-
-                subComments.prepend(comments);
-                console.log(111);
-            });
-
+        if(subComments.children().length!=1){//如果不是第一次打开就不用再次请求数据
             //展开
             comments.addClass("in");
             e.setAttribute("data-collapse", "in");
             //展开时 按钮亮
             e.classList.add("active");
-        });
+        }else{//如果是第一次打开请求数据
+            $.getJSON("/comment/" + id, function (data) {//遍历对应二级评论
+                $.each(data.data, function (index, comment) {
+                    var mediaBody = $("<div/>", {
+                        "class": "media-body"
+                    }).append(
+                        $("<h5/>", {
+                            "html": comment.user.name
+                        })
+                    ).append(
+                        $("<div/>", {
+                            "html": comment.content
+                        })
+                    ).append(
+                        $("<div/>", {
+                            "class": "menu"
+                        }).append(
+                            $("<span/>",{
+                                "class":"pull-right",
+                                "html": moment(comment.gmtCreate).format('YYYY-MM-DD')
+                            })
+                        )
+                    );
+                    var mediaLeft = $("<div/>", {
+                        "class": "media-left"
+                    }).append(
+                        $("<a/>")
+                    ).append(
+                        $("<img/>", {
+                            "class": "media-object img-rounded localImg",
+                            "src": comment.user.avatarUrl
+                        })
+                    );
+                    var media = $("<div/>", {
+                        "class": "media"
+                    }).append(mediaLeft).append(mediaBody);
+
+                    var comments = $("<div/>", {
+                        "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12 comments"
+                    }).append(media);
+                    subComments.prepend(comments);
+                });
+
+                //展开
+                comments.addClass("in");
+                e.setAttribute("data-collapse", "in");
+                //展开时 按钮亮
+                e.classList.add("active");
+            });
+        }
+
 
     }
 }

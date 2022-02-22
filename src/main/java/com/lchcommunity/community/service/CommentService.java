@@ -4,10 +4,7 @@ import com.lchcommunity.community.dto.CommentDTO;
 import com.lchcommunity.community.enums.CommentTypeEnum;
 import com.lchcommunity.community.exception.CustomizeErrorCode;
 import com.lchcommunity.community.exception.CustomizeException;
-import com.lchcommunity.community.mapper.CommentMapper;
-import com.lchcommunity.community.mapper.QuestionExtMapper;
-import com.lchcommunity.community.mapper.QuestionMapper;
-import com.lchcommunity.community.mapper.UserMapper;
+import com.lchcommunity.community.mapper.*;
 import com.lchcommunity.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +28,8 @@ public class CommentService {
     QuestionExtMapper questionExtMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    CommentExtMapper commentExtMapper;
     //此注释作为默认值应用于声明类及其子类的所有方法。
     @Transactional//事务 将方法中的数据集操作作为一个事务，要么都成功，要么都失败
     public void insert(Comment comment) {
@@ -52,7 +51,9 @@ public class CommentService {
             Comment dbcomment = commentMapper.selectByPrimaryKey(comment.getParentId());
             if(dbcomment==null)
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
-
+            //更新二级评论数量
+            dbcomment.setCommentCount(1);
+            commentExtMapper.incCommentcout(dbcomment);
         }
         commentMapper.insert(comment);
     }
