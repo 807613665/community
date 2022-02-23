@@ -36,7 +36,7 @@ public class QuestionService {
     public PaginationDTO getQuestion(Integer page, Integer size) {
 
         Integer questionCount = (int) questionMapper.countByExample(new QuestionExample());
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         paginationDTO.setPagination(questionCount, page, size);
         if (page < 1)
             page = 1;
@@ -57,7 +57,7 @@ public class QuestionService {
             questionDTOList.add(questionDTO);
         }
         //将问题列表放入DTO中
-        paginationDTO.setQuestionDTOList(questionDTOList);
+        paginationDTO.setData(questionDTOList);
 
         return paginationDTO;
     }
@@ -67,7 +67,7 @@ public class QuestionService {
         questionExample.createCriteria()
                 .andCreatorEqualTo(id);
         Integer questionCount = (int) questionMapper.countByExample(questionExample);
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         paginationDTO.setPagination(questionCount, page, size);
         if (page < 1)
             page = 1;
@@ -90,7 +90,7 @@ public class QuestionService {
             questionDTOList.add(questionDTO);
         }
         //将问题列表放入DTO中
-        paginationDTO.setQuestionDTOList(questionDTOList);
+        paginationDTO.setData(questionDTOList);
 
         return paginationDTO;
     }

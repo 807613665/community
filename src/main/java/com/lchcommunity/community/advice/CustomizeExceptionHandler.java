@@ -28,7 +28,7 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
 
         String contentType = request.getContentType();
         //判断请求类型是json还是html
-        if(contentType.equals("application/json")){
+        if("application/json".equals(contentType)){
             //是json就使用writer将数据写到前端
             ResultDTO resultDTO = null;
             if(e instanceof CustomizeException){

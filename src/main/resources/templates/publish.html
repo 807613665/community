@@ -43,7 +43,7 @@
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" th:class="${ iterStat.first ? 'active tab-pane':'tab-pane'}" th:id="${selectTag.title}" th:each="selectTag,iterStat : ${tags}">
-                            <span class="label label-info qu glyphicon glyphicon-tags" th:onclick="selectTag([[${tag}]])" th:each="tag : ${selectTag.tag}" th:text="${' '+tag}">&nbsp;</span>
+                            <span style = "cursor:pointer;" class="label label-info qu glyphicon glyphicon-tags" th:onclick="selectTag([[${tag}]])" th:each="tag : ${selectTag.tag}" th:text="${' '+tag}">&nbsp;</span>
                         </div>
                     </div>
                 </div>

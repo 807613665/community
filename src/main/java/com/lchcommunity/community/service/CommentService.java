@@ -2,6 +2,8 @@ package com.lchcommunity.community.service;
 
 import com.lchcommunity.community.dto.CommentDTO;
 import com.lchcommunity.community.enums.CommentTypeEnum;
+import com.lchcommunity.community.enums.NotificationStatusEnum;
+import com.lchcommunity.community.enums.NotificationTypeEnum;
 import com.lchcommunity.community.exception.CustomizeErrorCode;
 import com.lchcommunity.community.exception.CustomizeException;
 import com.lchcommunity.community.mapper.*;
@@ -30,9 +32,11 @@ public class CommentService {
     UserMapper userMapper;
     @Autowired
     CommentExtMapper commentExtMapper;
+    @Autowired
+    NotificationMapper notificationMapper;
     //此注释作为默认值应用于声明类及其子类的所有方法。
     @Transactional//事务 将方法中的数据集操作作为一个事务，要么都成功，要么都失败
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User commentator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -46,17 +50,39 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             dbquestion.setCommentCount(1);
             questionExtMapper.incCommentcout(dbquestion);
+
+            insertNotification(comment, dbquestion.getCreator(), NotificationTypeEnum.REPLY_QUESTION.getType(),commentator.getName(),dbquestion.getTitle(), dbquestion.getId());
         }else{
             //回复评论
             Comment dbcomment = commentMapper.selectByPrimaryKey(comment.getParentId());
             if(dbcomment==null)
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
+
+            //回复问题
+            Question dbquestion = questionMapper.selectByPrimaryKey(dbcomment.getParentId());
+            if(dbquestion==null)
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             //更新二级评论数量
             dbcomment.setCommentCount(1);
             commentExtMapper.incCommentcout(dbcomment);
+
+            insertNotification(comment,dbcomment.getCommentator(),NotificationTypeEnum.REPLY_COMMENT.getType(), commentator.getName(), dbquestion.getTitle(), dbquestion.getId());
         }
         comment.setCommentCount(0);
         commentMapper.insert(comment);
+    }
+
+    private void insertNotification(Comment comment, Long receiverId, int type, String notifierName, String outerTitle,Long outerId) {
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setNotifier(comment.getCommentator());
+        notification.setReceiver(receiverId);
+        notification.setOuterid(outerId);
+        notification.setType(type);
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
