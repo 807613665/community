@@ -50,9 +50,6 @@ public class ProfileController {
             //获取通知
             PaginationDTO<NotificationDTO> paginationDTO = notificationService.list(user.getId(),page, size);
             model.addAttribute("paginationDTO", paginationDTO);
-
-            Long unreadCount = notificationService.unreadCount(user.getId());
-            request.getSession().setAttribute("unreadCount", unreadCount);
         }
         return "profile";
     }

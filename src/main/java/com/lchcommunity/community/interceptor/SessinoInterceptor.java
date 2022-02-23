@@ -3,6 +3,7 @@ package com.lchcommunity.community.interceptor;
 import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.User;
 import com.lchcommunity.community.model.UserExample;
+import com.lchcommunity.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import java.util.List;
 public class SessinoInterceptor implements HandlerInterceptor {
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    NotificationService notificationService;
 
     @Value("${github.redirect.uri}")
     private String githubRedirectUri;
@@ -42,6 +45,9 @@ public class SessinoInterceptor implements HandlerInterceptor {
                     List<User> user = userMapper.selectByExample(userExample);
                     if (user.size() != 0) {
                         request.getSession().setAttribute("user", user.get(0));
+                        //通知数量
+                        Long unreadCount = notificationService.unreadCount(user.get(0).getId());
+                        request.getSession().setAttribute("unreadCount", unreadCount);
                     }
                     break;
                 }
