@@ -5,6 +5,7 @@ import com.lchcommunity.community.dto.GithubUser;
 import com.lchcommunity.community.model.User;
 import com.lchcommunity.community.provider.GithubProvider;
 import com.lchcommunity.community.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
+//日志
+@Slf4j
 public class AuthorizeController {
 
     @Autowired
@@ -78,6 +81,7 @@ public class AuthorizeController {
             userService.updateOrInsert(user);
             return "redirect:/";
         } else {
+            log.error("callback get User error {}",giteeUser);
             //登录失败
             return "redirect:/";
         }
