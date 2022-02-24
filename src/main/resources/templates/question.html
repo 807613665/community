@@ -119,11 +119,11 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_textarea">
                     <div class="media-left">
                         <a href="#">
-                            <img class="media-object img-rounded localImg" th:src="${questions.user.avatarUrl}">
+                            <img class="media-object img-rounded localImg" th:src="${session.user!=null ? session.user.avatarUrl : '/images/default-avatar.png'}">
                         </a>
                     </div>
                     <div class="media-body">
-                        <h5 th:text="${questions.user.name}"></h5>
+                        <h5 th:text="${session.user!=null ? session.user.name : '未登录'}"></h5>
                     </div>
                     <input type="hidden" id="questions_id" th:value="${questions.id}">
                     <textarea class="form-control comment" rows="6" id="comment_content"></textarea>

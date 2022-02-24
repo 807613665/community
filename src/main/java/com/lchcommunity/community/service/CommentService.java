@@ -73,6 +73,9 @@ public class CommentService {
     }
 
     private void insertNotification(Comment comment, Long receiverId, int type, String notifierName, String outerTitle,Long outerId) {
+        //回复自己的评论不需要加通知
+        if(receiverId == comment.getCommentator())
+            return;
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setNotifier(comment.getCommentator());
