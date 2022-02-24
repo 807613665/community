@@ -25,12 +25,15 @@ public class IndexController {
             HttpServletRequest request,
             Model model,
             @RequestParam(name = "page", defaultValue = "1") Integer page,
-            @RequestParam(name = "size", defaultValue = "5") Integer size
+            @RequestParam(name = "size", defaultValue = "5") Integer size,
+            @RequestParam(name = "search", required = false) String search
     ) {
         //获取该页面获取的问题 分页
-        PaginationDTO paginationDTO = questionService.getQuestion(page, size);
+        PaginationDTO paginationDTO = questionService.getQuestion(search,page, size);
         model.addAttribute("paginationDTO", paginationDTO);
-
+        model.addAttribute("search", search);
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
         return "index";
     }
 }

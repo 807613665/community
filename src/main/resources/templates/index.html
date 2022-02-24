@@ -44,28 +44,28 @@
             <nav aria-label="Page navigation" style="float:right;" th:if="${paginationDTO.pageSum > 1}">
                 <ul class="pagination">
                     <li th:if="${paginationDTO.showFirstPage}">
-                        <a th:href="@{/(page=${1},size=${paginationDTO.size})}" aria-label="Previous">
+                        <a th:href="@{/(page=${1},size=${size},search=${search})}" aria-label="Previous">
                             <span aria-hidden="true"><<</span>
                         </a>
                     </li>
                     <li th:if="${paginationDTO.showLastPage}">
-                        <a th:href="@{/(page=${paginationDTO.page-1},size=${paginationDTO.size})}"
+                        <a th:href="@{/(page=${paginationDTO.page-1},size=${size},search=${search})}"
                            aria-label="Previous">
                             <span aria-hidden="true"><</span>
                         </a>
                     </li>
                     <li th:each="i : ${paginationDTO.pages}"
                         th:classappend="${i == paginationDTO.page} ? 'active' : '' ">
-                        <a th:href="@{/(page=${i},size=${paginationDTO.size})}" th:text="${i}" class="active"></a>
+                        <a th:href="@{/(page=${i},size=${size},search=${search})}" th:text="${i}" class="active"></a>
                     </li>
                     <li th:if="${paginationDTO.showNextPage}">
-                        <a th:href="@{/(page=${paginationDTO.page+1},size=${paginationDTO.size})}"
+                        <a th:href="@{/(page=${paginationDTO.page+1},size=${size},search=${search})}"
                            aria-label="Previous">
                             <span aria-hidden="true">></span>
                         </a>
                     </li>
                     <li th:if="${paginationDTO.showEndPage}">
-                        <a th:href="@{/(page=${paginationDTO.pageSum},size=${paginationDTO.size})}" aria-label="Next">
+                        <a th:href="@{/(page=${paginationDTO.pageSum},size=${size},search=${search})}" aria-label="Next">
                             <span aria-hidden="true">>></span>
                         </a>
                     </li>

@@ -2,6 +2,7 @@ package com.lchcommunity.community.service;
 
 import com.lchcommunity.community.dto.PaginationDTO;
 import com.lchcommunity.community.dto.QuestionDTO;
+import com.lchcommunity.community.dto.QuestionQueryDTO;
 import com.lchcommunity.community.exception.CustomizeErrorCode;
 import com.lchcommunity.community.exception.CustomizeException;
 import com.lchcommunity.community.mapper.QuestionExtMapper;
@@ -10,6 +11,7 @@ import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.Question;
 import com.lchcommunity.community.model.QuestionExample;
 import com.lchcommunity.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,19 @@ public class QuestionService {
     QuestionExtMapper questionExtMapper;
 
     //将Question、User、pageList  组装到一个类中
-    public PaginationDTO getQuestion(Integer page, Integer size) {
+    public PaginationDTO getQuestion(String search,Integer page, Integer size) {
 
-        Integer questionCount = (int) questionMapper.countByExample(new QuestionExample());
+        if(StringUtils.isNotBlank(search)){
+            search = search.replace(' ','|');
+        }
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setPage(page);
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setSearch(search);
+        Integer questionCount = questionExtMapper.countBySearch(questionQueryDTO);
+        //问题列表
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
+        //计算页码
         paginationDTO.setPagination(questionCount, page, size);
         if (page < 1)
             page = 1;
@@ -46,9 +57,9 @@ public class QuestionService {
         Integer offset = (page - 1) * size;
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");//在sql语句的最后面增加排序  倒序
-        List<Question> list = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
+        questionQueryDTO.setPage(offset);
+        //查询对应页码的数据
+        List<Question> list = questionExtMapper.selectBySearch(questionQueryDTO);
         for (Question question : list) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();

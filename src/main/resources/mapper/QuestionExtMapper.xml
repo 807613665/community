@@ -20,14 +20,14 @@
     <update id="incView" parameterType="com.lchcommunity.community.model.Question">
         update QUESTION
         set VIEW_COUNT = VIEW_COUNT + #{viewCount,jdbcType=INTEGER}
-            where id = #{id}
+        where id = #{id}
     </update>
     <update id="incCommentcout" parameterType="com.lchcommunity.community.model.Question">
         update QUESTION
         set COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType=INTEGER}
-            where id = #{id}
+        where id = #{id}
     </update>
-<!--    使用正则表达式查询相关联的问题-->
+    <!--    使用正则表达式查询相关联的问题-->
     <select id="selectRelated" parameterType="com.lchcommunity.community.model.Question" resultMap="BaseResultMap">
         select * from QUESTION
         <where>
@@ -39,5 +39,26 @@
             </if>
         </where>
         order by gmt_create limit 20
+    </select>
+
+    <select id="countBySearch" parameterType="com.lchcommunity.community.dto.QuestionQueryDTO"
+            resultType="java.lang.Integer">
+        select count(*) from QUESTION
+        <where>
+            <if test="search != null and search != '' ">
+                and title REGEXP #{search}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBySearch" parameterType="com.lchcommunity.community.dto.QuestionQueryDTO"
+            resultMap="BaseResultMap">
+        select * from QUESTION
+        <where>
+            <if test="search != null and search != ''">
+                and title REGEXP #{search}
+            </if>
+        </where>
+        order by gmt_create desc limit #{page},#{size}
     </select>
 </mapper>
