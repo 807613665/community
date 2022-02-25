@@ -5,6 +5,7 @@ import com.lchcommunity.community.dto.ResultDTO;
 import com.lchcommunity.community.exception.CustomizeErrorCode;
 import com.lchcommunity.community.exception.CustomizeException;
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,6 +22,7 @@ import java.io.PrintWriter;
 //CustomizeExceptionHandler用于业务异常（在CRUD中出现的异常）
 //CustomizeErrorController用于默认异常
 @ControllerAdvice
+@Slf4j
 public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
     //错误页面跳转
     @ExceptionHandler(Exception.class)
@@ -34,6 +36,7 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
             if(e instanceof CustomizeException){
                 resultDTO = ResultDTO.errorOf((CustomizeException) e);
             }else{
+                log.error(e.getMessage());
                 resultDTO = ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);
             }
             try{

@@ -3,6 +3,7 @@ package com.lchcommunity.community.service;
 import com.lchcommunity.community.mapper.UserMapper;
 import com.lchcommunity.community.model.User;
 import com.lchcommunity.community.model.UserExample;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

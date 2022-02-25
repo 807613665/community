@@ -18,11 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class QuestionService {
@@ -54,13 +51,14 @@ public class QuestionService {
         if (page > paginationDTO.getPageSum())
             page = paginationDTO.getPageSum();
 
-        Integer offset = (page - 1) * size;
+        Integer offset = Math.max(0,(page - 1) * size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         questionQueryDTO.setPage(offset);
         //查询对应页码的数据
         List<Question> list = questionExtMapper.selectBySearch(questionQueryDTO);
         for (Question question : list) {
+
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);

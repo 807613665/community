@@ -22,7 +22,10 @@
 [iconfont 图标](https://www.iconfont.cn/)
 ## 命令
 ```bash
+#执行flyway
 mvn flyway:migrate
+#修复
+mvn flyway:repair
 #使用标准 Maven 命令行属性将参数传递给目标。例如：
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 #这将运行 MBG 并指示它覆盖它可能找到的任何现有 Java 文件。
