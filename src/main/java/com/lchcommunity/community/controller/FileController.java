@@ -19,6 +19,12 @@ public class FileController {
     @RequestMapping("/file/upload")
     @ResponseBody
     public FileDTO upload(HttpServletRequest request) {
+
+//        FileDTO fileDTOs = new FileDTO();
+//        fileDTOs.setUrl("/upload/images/1.mp4");
+//        fileDTOs.setSuccess(1);
+//        return fileDTOs;
+
         //对request强转 获取其中的MultipartFile
         //或者使用@RequestParam(value = "editormd-image-file", required = true) MultipartFile file
         MultipartHttpServletRequest multipartFile = (MultipartHttpServletRequest) request;

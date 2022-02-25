@@ -41,7 +41,15 @@
                 </div>
                 <script type="text/javascript">
                     $(function() {
-                        editormd.markdownToHTML("question-markdown-view", {});
+                        // editormd.markdownToHTML("question-markdown-view", {});
+                        editormd.markdownToHTML("question-markdown-view", {
+                            htmlDecode :"style,script,iframe",
+                            emoji :true,
+                            taskList :true,
+                            tex :true, //默认不解析
+                            flowChart : true, //默认不解析
+                            sequenceDiagram : true //默认不解析
+                        });
                     });
                 </script>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
