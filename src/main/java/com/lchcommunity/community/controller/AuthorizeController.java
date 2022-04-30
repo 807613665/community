@@ -71,7 +71,11 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setAvatarUrl(giteeUser.getAvatarurl());
+            //gitee图床挂了
+            user.setAvatarUrl("/images/giteeimg.png");
             user.setAccountId(String.valueOf(giteeUser.getId()));
+
+            log.info("用户信息："+user);
 
             Cookie cookie = new Cookie("token", token);
             cookie.setMaxAge(60 * 60 * 24 * 30 * 6);

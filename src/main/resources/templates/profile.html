@@ -16,7 +16,7 @@
 <div class="container-fluid main">
     <div class="row profile">
         <!--左侧-->
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" style="padding-bottom: 20px;">
             <h2 th:text="${elementName}"></h2>
             <hr>
 
@@ -55,6 +55,7 @@
                     </div>
                 </div>
             </div>
+
             <!--分页-->
             <nav aria-label="Page navigation" style="float:right;" th:if="${paginationDTO.pageSum > 1}">
                 <ul class="pagination">

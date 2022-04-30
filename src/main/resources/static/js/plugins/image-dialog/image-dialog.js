@@ -94,7 +94,7 @@
                             }
 
                             if (url.endsWith(".mp4")) { // 如果是是视频
-                                var videoHtml = '<video class="video-js" controls preload="auto" width="100%" poster="" data-setup=\'{"aspectRatio":"16:9"}\'>\
+                                var videoHtml = '<video style="max-height: 400px;" class="video-js" controls preload="auto" width="100%" poster="" data-setup=\'{"aspectRatio":"16:9"}\'>\
                                             <source src="' + url + '" type=\'video/mp4\' >\
                                             <p class="vjs-no-js">\
                                             To view this video please enable JavaScript\
